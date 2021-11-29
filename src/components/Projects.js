@@ -1,15 +1,60 @@
-import React from 'react'
-import { Link } from 'gatsby'
-import Title from './Title'
-import styled from 'styled-components'
-import { GatsbyImage, getImage } from 'gatsby-plugin-image'
-import SearchButtons from './SearchButtons'
+import React, { useState } from "react"
+import { Link } from "gatsby"
+import Title from "./Title"
+import styled from "styled-components"
+import { GatsbyImage, getImage } from "gatsby-plugin-image"
+import SearchButtons from "./SearchButtons"
 
-const Projects = () => {
-  
+const Projects = ({ projects: data, title, page }) => {
+  console.log(data)
+  const [projects, setProjects] = useState(data)
+
+  const setBackToAll = () => {
+    setProjects(data)
+  }
 
   return (
-    <h2>projects</h2>
+    <Wrapper className="section">
+      <Title title={title || "projects"} />
+      {/* search button here */}
+      {page && (
+        <SearchButtons
+          projects={data}
+          setProjects={setProjects}
+          setBackToAll={setBackToAll}
+        />
+      )}
+      <div className="section-center">
+        {projects.map(project => {
+          const { id } = project
+          const {
+            name,
+            type,
+            image: { localFiles },
+          } = project.data
+          return (
+            <article key={id}>
+              <div className="container">
+                <GatsbyImage
+                  image={getImage(localFiles[0])}
+                  alt={name}
+                  className="img"
+                />
+                <div className="info">
+                  <p>- {type} -</p>
+                  <h3>{name}</h3>
+                </div>
+              </div>
+            </article>
+          )
+        })}
+      </div>
+      {!page && (
+        <Link to="/projects" className="btn">
+          all projects
+        </Link>
+      )}
+    </Wrapper>
   )
 }
 
@@ -84,7 +129,7 @@ const Wrapper = styled.section`
   }
   a {
     display: block;
-    width: 9rem;
+    width: 10rem;
     text-align: center;
     margin: 0 auto;
     margin-top: 3rem;

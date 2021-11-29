@@ -1,10 +1,24 @@
-import React from 'react'
-import styled from 'styled-components'
-import { Link } from 'gatsby'
-import { StaticImage } from 'gatsby-plugin-image'
+import React from "react"
+import styled from "styled-components"
+import { Link } from "gatsby"
+import { StaticImage } from "gatsby-plugin-image"
 const Hero = () => {
   return (
-    <h2>hero component</h2>
+    <Wrapper>
+      <StaticImage
+        src="../images/mainBcg.png"
+        layout="fullWidth"
+        className="img"
+        alt="color palette"
+      />
+      <div className="info">
+        <article>
+          <h3>If You Can Dream It, We Can Create It</h3>
+          <h1>let your home be unique and stylish</h1>
+          <Link to="/projects">projects</Link>
+        </article>
+      </div>
+    </Wrapper>
   )
 }
 
@@ -39,7 +53,7 @@ const Wrapper = styled.section`
     }
     h3 {
       font-weight: 400;
-      font-family: 'Caveat', cursive;
+      font-family: "Caveat", cursive;
     }
     a {
       background: transparent;

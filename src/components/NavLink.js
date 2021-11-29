@@ -1,11 +1,24 @@
-import React, { useContext } from 'react'
+import React, { useContext } from "react"
 
-import styled from 'styled-components'
-import { Link } from 'gatsby'
-import { GatsbyContext } from '../context/context'
-const NavLink = () => {
+import styled from "styled-components"
+import { Link } from "gatsby"
+import { GatsbyContext } from "../context/context"
+const NavLink = ({ page }) => {
+  const { links } = useContext(GatsbyContext)
+  const tempLinks = links.filter(link => link.page === page)
   return (
-    <h2>nav link</h2>
+    <Wrapper>
+      <button>{page}</button>
+      <div className="links">
+        {tempLinks.map((link, id) => (
+          <Link key={id} to={link.url}>
+            {link.icon}
+            {link.label}
+          </Link>
+        ))}
+        <div className="caret" />
+      </div>
+    </Wrapper>
   )
 }
 

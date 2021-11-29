@@ -1,13 +1,32 @@
-import React, { useContext } from 'react'
-import styled from 'styled-components'
-import logo from '../images/logo.svg'
-import { GoThreeBars } from 'react-icons/go'
-import { Link } from 'gatsby'
-import NavLink from './NavLink'
-import { GatsbyContext } from '../context/context'
+import React, { useContext } from "react"
+import styled from "styled-components"
+import logo from "../images/logo.svg"
+import { GoThreeBars } from "react-icons/go"
+import { Link } from "gatsby"
+import NavLink from "./NavLink"
+import { GatsbyContext } from "../context/context"
 const Navbar = () => {
+  const { setIsSidebarOpen, links } = useContext(GatsbyContext)
+  const tempLinks = [...new Set(links.map(link => link.page))]
+  console.log("tempLinks", tempLinks)
   return (
-   <h2>navbar component</h2>
+    <Wrapper>
+      <div className="nav-center">
+        <div className="nav-header">
+          <Link to="/">
+            <img src={logo} alt="design" />
+          </Link>
+          <button className="toggle-btn" onClick={() => setIsSidebarOpen(true)}>
+            <GoThreeBars />
+          </button>
+        </div>
+        <ul className="nav-links">
+          {tempLinks.map((link, id) => (
+            <NavLink key={id} page={link} />
+          ))}
+        </ul>
+      </div>
+    </Wrapper>
   )
 }
 

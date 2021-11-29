@@ -1,12 +1,31 @@
-import React from 'react'
-import styled from 'styled-components'
+import React, { useEffect, useState } from "react"
+import styled from "styled-components"
 
-const SearchButtons = () => {
-  
+const SearchButtons = ({ projects, setProjects, setBackToAll }) => {
+  const [active, setActive] = useState(0)
+  const types = ["all", ...new Set(projects.map(project => project.data.type))]
 
-  
+  const onChangeTypeHandler = (type, id) => {
+    setActive(id)
+    if (type === "all") {
+      setBackToAll()
+    } else {
+      setProjects(projects.filter(project => project.data.type === type))
+    }
+  }
+
   return (
-    <h2>search buttons</h2>
+    <Wrapper>
+      {types.map((type, id) => (
+        <button
+          key={id}
+          onClick={() => onChangeTypeHandler(type, id)}
+          className={active === id ? "active" : ""}
+        >
+          {type}
+        </button>
+      ))}
+    </Wrapper>
   )
 }
 const Wrapper = styled.section`

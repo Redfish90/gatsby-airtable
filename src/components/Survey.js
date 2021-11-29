@@ -1,13 +1,86 @@
-import React, { useEffect, useState } from 'react'
-import Title from './Title'
-import styled from 'styled-components'
-import base from './Airtable'
-import { FaVoteYea } from 'react-icons/fa'
+import React, { useEffect, useState } from "react"
+import Title from "./Title"
+import styled from "styled-components"
+import base from "./Airtable"
+import { FaVoteYea } from "react-icons/fa"
 
 const Survey = () => {
- 
+  const [items, setItems] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  const getRecords = async () => {
+    try {
+      const response = await base("Survey").select({}).firstPage()
+      const newItems = response.map(record => {
+        const { id, fields } = record
+        return { id, ...fields }
+      })
+      setLoading(false)
+      setItems(newItems)
+    } catch (error) {
+      setLoading(false)
+      console.log("error", error.details)
+    }
+  }
+
+  const giveVote = async id => {
+    setLoading(true)
+    const tempItems = [...items].map(item => {
+      if (item.id === id) {
+        const { id, name, votes } = item
+        const fields = { name, votes: votes + 1 }
+        return { id, fields }
+      } else {
+        const { id, name, votes } = item
+        const fields = { name, votes }
+        return { id, fields }
+      }
+    })
+    try {
+      const response = await base("Survey").update(tempItems)
+      const newItems = response.map(record => {
+        const { id, fields } = record
+        return { id, ...fields }
+      })
+      setLoading(false)
+      setItems(newItems)
+    } catch (error) {
+      setLoading(false)
+      console.log("error", error.details)
+    }
+  }
+
+  useEffect(() => {
+    getRecords()
+  }, [])
+
   return (
-   <h2>survey component</h2>
+    <Wrapper className="section">
+      <div className="container">
+        <Title title="survey" />
+        <h3>most important room in the house?</h3>
+        {loading ? (
+          <h3>Loading...</h3>
+        ) : (
+          <ul>
+            {items.map(item => (
+              <li key={item.id}>
+                <div className="key">
+                  {item.name.toUpperCase().substring(0, 2)}
+                </div>
+                <div>
+                  <h4>{item.name}</h4>
+                  <p>{item.votes} votes</p>
+                </div>
+                <button onClick={() => giveVote(item.id)}>
+                  <FaVoteYea />
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    </Wrapper>
   )
 }
 
