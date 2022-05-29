@@ -3,6 +3,7 @@ import styled from "styled-components"
 import Title from "./Title"
 import services from "../constants/services"
 const About = () => {
+  cosole.log("TEXT")
   return (
     <Wrapper className="section">
       <Title title="about" />
